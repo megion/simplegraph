@@ -10,7 +10,7 @@ Clone project, build and run tests:
 Examples:
 =========
 
-* Writing csv files:
+* Get path between two vertices:
 
 ```java
     /**
