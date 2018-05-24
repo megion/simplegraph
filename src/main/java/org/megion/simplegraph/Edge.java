@@ -13,12 +13,11 @@ public class Edge<T> {
     }
 
     public Vertex<T> getFrom() {
-		return from;
-	}
+        return from;
+    }
 
     public Vertex<T> getTo() {
         return to;
     }
 
-	
 }

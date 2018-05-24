@@ -14,8 +14,8 @@ public class TraversalResult<T> {
     public TraversalResult() {
     }
 
-	public Map<Vertex<T>, Edge<T>> getParents() {
-		return parents;
-	}
+    public Map<Vertex<T>, Edge<T>> getParents() {
+        return parents;
+    }
 
 }

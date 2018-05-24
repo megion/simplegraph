@@ -83,10 +83,10 @@ public class Graph<T> {
             for (Edge<T> edge : vert.getEdges()) {
                 Vertex<T> child = edge.getTo();
                 //if (!child.isProcessed() || directed) {
-                    //// 2. processEdge(edge)
+                //// 2. processEdge(edge)
                 //}
-                
-                if(!child.isDiscovered()) {
+
+                if (!child.isDiscovered()) {
                     childrenQueue.add(child);
                     child.setDiscovered(true);
                     result.getParents().put(child, edge);
@@ -105,9 +105,9 @@ public class Graph<T> {
 
         Vertex<T> childVertex = end;
 
-        while(true) {
+        while (true) {
             Edge<T> parentEdge = result.getParents().get(childVertex);
-            if(parentEdge ==  null) {
+            if (parentEdge ==  null) {
                 // finish but start vertex not found in parents for end, so
                 // return null
                 return null;
@@ -115,7 +115,7 @@ public class Graph<T> {
 
             pathEdges.add(parentEdge);
             childVertex = parentEdge.getFrom();
-            if(childVertex.equals(start)) {
+            if (childVertex.equals(start)) {
                 // start vertex is found
                 Collections.reverse(pathEdges);
                 return pathEdges;
