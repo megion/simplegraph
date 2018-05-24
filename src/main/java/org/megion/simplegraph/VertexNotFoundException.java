@@ -2,11 +2,17 @@ package org.megion.simplegraph;
 
 public class VertexNotFoundException extends RuntimeException {
 
-    private final Graph<?>.Vertex vertex;
+    private static final long serialVersionUID = 138775040495766726L;
 
-    public VertexNotFoundException(Graph<?>.Vertex vertex) {
+	private final Vertex<?> vertex;
+
+    public VertexNotFoundException(Vertex<?> vertex) {
         this.vertex = vertex;
     }
+
+	public Vertex<?> getVertex() {
+		return vertex;
+	}
 
 }
 
