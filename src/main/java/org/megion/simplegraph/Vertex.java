@@ -12,9 +12,6 @@ public class Vertex<T> {
     //private int weight = 0;
     private final List<Edge<T>> edges;
 
-    private boolean processed = false;
-    private boolean discovered = false;
-
     public Vertex(T data) {
         this.data = data;
         this.edges = new ArrayList<Edge<T>>(0);
@@ -26,22 +23,6 @@ public class Vertex<T> {
 
     public List<Edge<T>> getEdges() {
         return edges;
-    }
-
-    public boolean isProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
-    }
-
-    public boolean isDiscovered() {
-        return discovered;
-    }
-
-    public void setDiscovered(boolean discovered) {
-        this.discovered = discovered;
     }
 
     @Override

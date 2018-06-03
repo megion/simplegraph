@@ -17,11 +17,10 @@ public class Graph<T> {
     private final boolean directed;
     private int edgesCount = 0;
     // vertices
-    private final Set<Vertex<T>> vertices;
+    private final Set<Vertex<T>> vertices = new HashSet<Vertex<T>>();
 
     public Graph(boolean directed) {
         this.directed = directed;
-        vertices = new HashSet<Vertex<T>>();
     }
 
     /**
@@ -66,68 +65,12 @@ public class Graph<T> {
         insertEdge(node1, node2, directed);
     }
 
-    /**
-     * Breadth-first traversal for graph
-     */
-    public TraversalResult<T> bfsTraversal(Vertex<T> start) {
-
-        initializeTraversal();
-        TraversalResult<T> result = new TraversalResult<T>();
-
-        Queue<Vertex<T>> childrenQueue = new LinkedList<Vertex<T>>();
-        childrenQueue.add(start);
-        Iterator<Vertex<T>> iter = childrenQueue.iterator();
-        while (iter.hasNext()) {
-            Vertex<T> vert = childrenQueue.remove();
-            // 1. processVertexBefore(vert)
-            for (Edge<T> edge : vert.getEdges()) {
-                Vertex<T> child = edge.getTo();
-                //if (!child.isProcessed() || directed) {
-                //// 2. processEdge(edge)
-                //}
-
-                if (!child.isDiscovered()) {
-                    childrenQueue.add(child);
-                    child.setDiscovered(true);
-                    result.getParents().put(child, edge);
-                }
-            }
-            // 2. processVertexAfter(vert)
-
+    public Map<TraversalVertex> initializeTraversal() {
+        Map<Vertex, TraversalVertex> traversalVertices = new HashMap<>();
+        for (Vertex<T> v: vertices) {
+            traversalVertices.add(new TraversalVertex());
         }
-
-        return result;
-    }
-
-    public List<Edge<T>> getPath(Vertex<T> start, Vertex<T> end) {
-        TraversalResult<T> result = bfsTraversal(start);
-        List<Edge<T>> pathEdges = new ArrayList<Edge<T>>();
-
-        Vertex<T> childVertex = end;
-
-        while (true) {
-            Edge<T> parentEdge = result.getParents().get(childVertex);
-            if (parentEdge ==  null) {
-                // finish but start vertex not found in parents for end, so
-                // return null
-                return null;
-            }
-
-            pathEdges.add(parentEdge);
-            childVertex = parentEdge.getFrom();
-            if (childVertex.equals(start)) {
-                // start vertex is found
-                Collections.reverse(pathEdges);
-                return pathEdges;
-            }
-        }
-    }
-
-    private void initializeTraversal() {
-        for (Vertex<T> v : vertices) {
-            v.setProcessed(false);
-            v.setDiscovered(false);
-        }
+        return traversalVertices;
     }
 
     public boolean isDirected() {
