@@ -1,23 +1,18 @@
 package org.megion.simplegraph;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
- * Simple graph
+ * Simple graph.
+ * Thread safe realization
  */
 public class Graph<T> {
 
     private final boolean directed;
     private int edgesCount = 0;
     // vertices
-    private final Set<Vertex<T>> vertices = new HashSet<Vertex<T>>();
+    private final Map<VertexKey<T>, Vertex<T>> vertices = new HashMap<>();
 
     public Graph(boolean directed) {
         this.directed = directed;
@@ -25,52 +20,55 @@ public class Graph<T> {
 
     /**
      * Add vertex to the graph
-     * return new Vertex
+     * return new VertexKey
      */
-    public Vertex<T> addVertex(T nodeData) throws VertexAlreadyExistsException {
-        Vertex<T> node = new Vertex<T>(nodeData);
+    public synchronized VertexKey<T> addVertex(T data)
+    throws VertexAlreadyExistsException {
+        VertexKey<T> key = new VertexKey<>(data);
 
         // check if vertex has been added.
-        if (vertices.contains(node)) {
-            throw new VertexAlreadyExistsException(node);
+        if (vertices.containsKey(key)) {
+            throw new VertexAlreadyExistsException(key);
         }
 
-        vertices.add(node);
-        return node;
+        Vertex<T> vertex = new Vertex<>();
+        vertices.put(key, vertex);
+        return key;
     }
 
-    private void insertEdge(Vertex<T> from, Vertex<T> to, boolean directed) {
-        Edge<T> edge = new Edge<T>(from, to);
-        from.getEdges().add(edge);
+    private void insertEdge(VertexKey<T> keyFrom, Vertex<T> vertexFrom,
+                            VertexKey<T> keyTo, Vertex<T> vertexTo,
+                            boolean directed) {
+        Edge<T> edge = new Edge<>(keyFrom, keyTo);
+        vertexFrom.getEdges().add(edge);
 
         if (directed) {
             edgesCount++;
         } else {
-            insertEdge(to, from, true);
+            insertEdge(keyTo, vertexTo, keyFrom, vertexFrom, true);
         }
     }
 
     /**
-     * Add edge from node1 to node2
+     * Add edge from -> to
      */
-    public void addEdge(Vertex<T> node1, Vertex<T> node2)
+    public synchronized void addEdge(VertexKey<T> from, VertexKey<T> to)
     throws VertexNotFoundException {
-        if (!vertices.contains(node1)) {
-            throw new VertexNotFoundException(node1);
+        Vertex<T> vertexFrom = vertices.get(from);
+        if (vertexFrom == null) {
+            throw new VertexNotFoundException(vertexFrom);
         }
-        if (!vertices.contains(node2)) {
-            throw new VertexNotFoundException(node2);
+        Vertex<T> vertexTo = vertices.get(to);
+        if (vertexTo == null) {
+            throw new VertexNotFoundException(vertexTo);
         }
 
-        insertEdge(node1, node2, directed);
+        insertEdge(from, vertexFrom, to, vertexTo, directed);
     }
 
-    public Map<TraversalVertex> initializeTraversal() {
-        Map<Vertex, TraversalVertex> traversalVertices = new HashMap<>();
-        for (Vertex<T> v: vertices) {
-            traversalVertices.add(new TraversalVertex());
-        }
-        return traversalVertices;
+    public synchronized Map<VertexKey<T>, Vertex<T>> getCloneVertices() {
+        Map<VertexKey<T>, Vertex<T>> clone = new HashMap<>(vertices);
+        return clone;
     }
 
     public boolean isDirected() {

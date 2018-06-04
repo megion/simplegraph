@@ -4,14 +4,14 @@ public class VertexAlreadyExistsException extends RuntimeException {
 
     private static final long serialVersionUID = 1864633719888188147L;
 
-    private final Vertex<?> vertex;
+    private final VertexKey<?> vertexKey;
 
-    public VertexAlreadyExistsException(Vertex<?> vertex) {
-        this.vertex = vertex;
+    public VertexAlreadyExistsException(VertexKey<?> vertexKey) {
+        this.vertexKey = vertexKey;
     }
 
-    public Vertex<?> getVertex() {
-        return vertex;
+    public VertexKey<?> getVertexKey() {
+        return vertexKey;
     }
 
 }

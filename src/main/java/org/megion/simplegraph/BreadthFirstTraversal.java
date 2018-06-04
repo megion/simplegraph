@@ -21,8 +21,7 @@ public class BreadthFirstTraversal<T> {
      */
     public TraversalResult<T> traversal(Graph<T> graph, Vertex<T> start) {
 
-        initializeTraversal();
-        
+        Map<VertexKey<T>, Vertex<T>> vertices = graph.getCloneVertices();
         TraversalResult<T> result = new TraversalResult<T>();
 
         Queue<Vertex<T>> childrenQueue = new LinkedList<Vertex<T>>();
