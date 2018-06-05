@@ -4,19 +4,19 @@ package org.megion.simplegraph;
  * Edge
  */
 public class Edge<T> {
-    private final VertexKey<T> from;
-    private final VertexKey<T> to;
+    private final Vertex<T> from;
+    private final Vertex<T> to;
 
-    public Edge(VertexKey<T> from, VertexKey<T> to) {
+    public Edge(Vertex<T> from, Vertex<T> to) {
         this.from = from;
         this.to = to;
     }
 
-    public VertexKey<T> getFrom() {
+    public Vertex<T> getFrom() {
         return from;
     }
 
-    public VertexKey<T> getTo() {
+    public Vertex<T> getTo() {
         return to;
     }
 
