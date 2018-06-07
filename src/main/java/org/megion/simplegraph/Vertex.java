@@ -2,6 +2,7 @@ package org.megion.simplegraph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * Vertex
@@ -12,14 +13,27 @@ public class Vertex<T> {
     private final T data;
 
     //private int weight = 0;
-    private final List<Edge<T>> edges = new ArrayList<Edge<T>>(0);
+    private final List<Edge<T>> edges;
 
     public Vertex(T data) {
         this.data = data;
+        this.edges = new ArrayList<Edge<T>>(0);
     }
 
-    public List<Edge<T>> getEdges() {
-        return edges;
+    /**
+     * Copy constuctor
+     */
+    public Vertex(Vertex<T> other) {
+        this.data = other.data;
+        this.edges = new ArrayList<Edge<T>>(other.edges); 
+    }
+
+    public void addEdge(Edge<T> edge) {
+        edges.add(edge);
+    }
+
+    public Iterator<Edge<T>> getEdgesIterator() {
+        return edges.iterator();
     }
 
     @Override

@@ -20,6 +20,8 @@ public class Graph<T> {
 
     /**
      * Add vertex to the graph
+     * Thread-safe method
+     *
      * return new VertexKey
      */
     public synchronized Vertex<T> addVertex(T data)
@@ -37,7 +39,7 @@ public class Graph<T> {
 
     private void insertEdge(Vertex<T> from, Vertex<T> to, boolean directed) {
         Edge<T> edge = new Edge<>(from, to);
-        from.getEdges().add(edge);
+        from.addEdge(edge);
 
         if (directed) {
             edgesCount++;
@@ -48,6 +50,7 @@ public class Graph<T> {
 
     /**
      * Add edge from -> to
+     * Thread-safe method
      */
     public synchronized void addEdge(Vertex<T> from, Vertex<T> to)
     throws VertexNotFoundException {
@@ -61,9 +64,18 @@ public class Graph<T> {
         insertEdge(from, to, directed);
     }
 
-    public synchronized Set<Vertex<T>> getCloneVertices() {
-        Set<Vertex<T>> clone = new HashSet<>(vertices);
-        return clone;
+    /**
+     * create traversal verticies set.
+     * Thread-safe method
+     */
+    public synchronized Set<TraversalVertex<T>> createTraversalVertices(
+            Graph<T> graph) {
+        Set<TraversalVertex<T>> traversalVertices = new HashSet<>(); 
+
+        for(Vertex<T> vert: vertices) {
+            traversalVertices.add(new TraversalVertex<T>(vert));
+        }
+        return traversalVertices;
     }
 
     public boolean isDirected() {

@@ -17,7 +17,8 @@ public class TraversalVertex<T> {
     private final Vertex<T> vertex;
 
     public TraversalVertex(Vertex<T> vertex) {
-        this.vertex = vertex;
+        // create clone
+        this.vertex = new Vertex<>(vertex);
     }
 
     @Override

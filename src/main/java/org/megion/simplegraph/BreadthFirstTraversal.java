@@ -47,7 +47,9 @@ public class BreadthFirstTraversal<T> {
             TraversalVertex<T> vert = childrenQueue.remove();
             vert.setProcessed(true);
             // 1. processVertexBefore(vert)
-            for (Edge<T> edge : vert.getVertex().getEdges()) {
+            Iterator<Edge<T>> edges = vert.getVertex().getEdgesIterator();
+            while (edges.hasNext()) {
+                Edge<T> edge = edges.next(); 
                 Vertex<T> child = edge.getTo();
                 //if (!child.isProcessed() || directed) {
                 //// 2. processEdge(edge)
