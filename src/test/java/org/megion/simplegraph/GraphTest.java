@@ -44,10 +44,10 @@ public class GraphTest {
 
         BreadthFirstTraversal<Integer> bfs = new BreadthFirstTraversal<>();
         List<Vertex<Integer>> path = bfs.getPath(graph, v1, v4);
-        assertEquals(2, path.size());
-        System.out.println("------------- " + path.get(0).getData());
-        assertEquals(v5, path.get(0));
-        assertEquals(v4, path.get(1));
+        assertEquals(3, path.size());
+        assertEquals(v1, path.get(0));
+        assertEquals(v5, path.get(1));
+        assertEquals(v4, path.get(2));
 
         path = bfs.getPath(graph, v2, v6);
         assertNull(path);

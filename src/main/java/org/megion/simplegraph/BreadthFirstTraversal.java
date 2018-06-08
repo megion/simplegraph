@@ -65,7 +65,10 @@ public class BreadthFirstTraversal<T> {
 
         TraversalVertex<T> startVertex = new TraversalVertex<>(start);
         TraversalVertex<T> childVertex = new TraversalVertex<>(end);
-
+    
+        /*
+         * iterate by parents from end to start
+         */
         while (true) {
             Edge parentEdge = result.getParents().get(childVertex);
             if (parentEdge == null) {
