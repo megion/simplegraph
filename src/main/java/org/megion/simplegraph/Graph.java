@@ -1,7 +1,7 @@
 package org.megion.simplegraph;
 
-import java.util.Set;
-import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Simple graph.
@@ -11,8 +11,11 @@ public class Graph<T> {
 
     private final boolean directed;
     private int edgesCount = 0;
-    // vertices
-    private final Set<Vertex<T>> vertices = new HashSet<>();
+
+    /**
+     * array of vertices
+     */
+    private final List<Vertex<T>> vertices = new ArrayList<>();
 
     public Graph(boolean directed) {
         this.directed = directed;
@@ -37,14 +40,15 @@ public class Graph<T> {
         return vertex;
     }
 
-    private void insertEdge(Vertex<T> from, Vertex<T> to, boolean directed) {
-        Edge<T> edge = new Edge<>(from, to);
+    private void insertEdge(Vertex<T> from, int fromIndex, Vertex<T> to,
+                            int toIndex, boolean directed) {
+        Edge edge = new Edge(fromIndex, toIndex);
         from.addEdge(edge);
 
         if (directed) {
             edgesCount++;
         } else {
-            insertEdge(to, from, true);
+            insertEdge(to, toIndex, from, fromIndex, true);
         }
     }
 
@@ -54,25 +58,27 @@ public class Graph<T> {
      */
     public synchronized void addEdge(Vertex<T> from, Vertex<T> to)
     throws VertexNotFoundException {
-        if (!vertices.contains(from)) {
+
+        int fromIndex = vertices.indexOf(from);
+        if (fromIndex < 0) {
             throw new VertexNotFoundException(from);
         }
-        if (!vertices.contains(to)) {
+        int toIndex = vertices.indexOf(to);
+        if (toIndex < 0) {
             throw new VertexNotFoundException(to);
         }
 
-        insertEdge(from, to, directed);
+        insertEdge(from, fromIndex, to, toIndex, directed);
     }
 
     /**
-     * create traversal verticies set.
+     * create traversal verticies set
      * Thread-safe method
      */
-    public synchronized Set<TraversalVertex<T>> createTraversalVertices(
-            Graph<T> graph) {
-        Set<TraversalVertex<T>> traversalVertices = new HashSet<>(); 
+    public synchronized List<TraversalVertex<T>> createTraversalVertices() {
+        List<TraversalVertex<T>> traversalVertices = new ArrayList<>();
 
-        for(Vertex<T> vert: vertices) {
+        for (Vertex<T> vert : vertices) {
             traversalVertices.add(new TraversalVertex<T>(vert));
         }
         return traversalVertices;

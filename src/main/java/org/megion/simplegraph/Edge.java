@@ -3,20 +3,27 @@ package org.megion.simplegraph;
 /**
  * Edge
  */
-public class Edge<T> {
-    private final Vertex<T> from;
-    private final Vertex<T> to;
+public class Edge {
+    /**
+     * from vertex index into vertices array 
+     */
+    private final int from;
 
-    public Edge(Vertex<T> from, Vertex<T> to) {
+    /**
+     * to vertex index into vertices array 
+     */
+    private final int to;
+
+    public Edge(int from, int to) {
         this.from = from;
         this.to = to;
     }
 
-    public Vertex<T> getFrom() {
+    public int getFrom() {
         return from;
     }
 
-    public Vertex<T> getTo() {
+    public int getTo() {
         return to;
     }
 

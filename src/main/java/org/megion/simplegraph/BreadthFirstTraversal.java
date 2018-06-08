@@ -3,13 +3,9 @@ package org.megion.simplegraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
 
 /**
  * Breadth-first graph traversal
@@ -19,23 +15,12 @@ public class BreadthFirstTraversal<T> {
     public BreadthFirstTraversal() {
     }
 
-    private Set<TraversalVertex<T>> createTraversalVertices(
-            Graph<T> graph) {
-        Set<TraversalVertex<T>> traversalVertices = new HashSet<>(); 
-        Set<Vertex<T>> vertices = graph.getCloneVertices();
-
-        for(Vertex<T> vert: vertices) {
-            traversalVertices.add(new TraversalVertex<T>(vert));
-        }
-        return traversalVertices;
-    }
-
     /**
      */
     public TraversalResult<T> traversal(Graph<T> graph, Vertex<T> startVertex) {
 
-        Set<TraversalVertex<T>> vertices = createTraversalVertices(graph);
-        TraversalResult<T> result = new TraversalResult<T>();
+        List<TraversalVertex<T>> vertices = graph.createTraversalVertices();
+        TraversalResult<T> result = new TraversalResult<T>(vertices);
 
         Queue<TraversalVertex<T>> childrenQueue = new LinkedList<>();
         TraversalVertex<T> start = new TraversalVertex<>(startVertex);
@@ -47,10 +32,10 @@ public class BreadthFirstTraversal<T> {
             TraversalVertex<T> vert = childrenQueue.remove();
             vert.setProcessed(true);
             // 1. processVertexBefore(vert)
-            Iterator<Edge<T>> edges = vert.getVertex().getEdgesIterator();
+            Iterator<Edge> edges = vert.getVertex().getEdgesIterator();
             while (edges.hasNext()) {
-                Edge<T> edge = edges.next(); 
-                Vertex<T> child = edge.getTo();
+                Edge edge = edges.next();
+                TraversalVertex<T> child = vertices.get(edge.getTo());
                 //if (!child.isProcessed() || directed) {
                 //// 2. processEdge(edge)
                 //}
@@ -58,33 +43,39 @@ public class BreadthFirstTraversal<T> {
                 if (!child.isDiscovered()) {
                     childrenQueue.add(child);
                     child.setDiscovered(true);
+                    // edge.from is parent vertex for child
                     result.getParents().put(child, edge);
                 }
             }
-            // 2. processVertexAfter(vert)
-
+            // 3. processVertexAfter(vert)
         }
 
         return result;
     }
 
-    public List<Edge<T>> getPath(Vertex<T> start, Vertex<T> end) {
-        TraversalResult<T> result = bfsTraversal(start);
-        List<Edge<T>> pathEdges = new ArrayList<Edge<T>>();
+    public List<Vertex<T>> getPath(Graph<T> graph, Vertex<T> start,
+                                   Vertex<T> end) {
+        /*
+         * for get the shortest path we should do breadth-first graph traversal
+         * begin from `start` vertex (root tree)
+         */
+        TraversalResult<T> result = traversal(graph, start);
+        List<TraversalVertex<T>> vertices = result.getVertices();
+        List<Vertex<T>> pathEdges = new ArrayList<>();
 
-        Vertex<T> childVertex = end;
+        TraversalVertex<T> startVertex = new TraversalVertex<>(start);
+        TraversalVertex<T> childVertex = new TraversalVertex<>(end);
 
         while (true) {
-            Edge<T> parentEdge = result.getParents().get(childVertex);
-            if (parentEdge ==  null) {
-                // finish but start vertex not found in parents for end, so
-                // return null
+            Edge parentEdge = result.getParents().get(childVertex);
+            if (parentEdge == null) {
+                // parent not found in parents, so return null
                 return null;
             }
 
-            pathEdges.add(parentEdge);
-            childVertex = parentEdge.getFrom();
-            if (childVertex.equals(start)) {
+            childVertex = vertices.get(parentEdge.getFrom());
+            pathEdges.add(childVertex.getVertex());
+            if (childVertex.equals(startVertex)) {
                 // start vertex is found
                 Collections.reverse(pathEdges);
                 return pathEdges;
@@ -92,5 +83,5 @@ public class BreadthFirstTraversal<T> {
         }
     }
 
-    
+
 }

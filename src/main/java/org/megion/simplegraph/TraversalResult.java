@@ -1,6 +1,7 @@
 package org.megion.simplegraph;
 
 import java.util.Map;
+import java.util.List;
 import java.util.HashMap;
 
 /**
@@ -8,14 +9,25 @@ import java.util.HashMap;
  */
 public class TraversalResult<T> {
 
-    private final Map<Vertex<T>, Edge<T>> parents =
-        new HashMap<Vertex<T>, Edge<T>>();
+    /**
+     * store association child(vertex key) -> edge value
+     * where edge.from is parent for child
+     */
+    private final Map<TraversalVertex<T>, Edge> parents =
+        new HashMap<TraversalVertex<T>, Edge>();
 
-    public TraversalResult() {
+    private final List<TraversalVertex<T>> vertices;
+
+    public TraversalResult(List<TraversalVertex<T>> vertices) {
+        this.vertices = vertices;
     }
 
-    public Map<Vertex<T>, Edge<T>> getParents() {
+    public Map<TraversalVertex<T>, Edge> getParents() {
         return parents;
     }
+
+	public List<TraversalVertex<T>> getVertices() {
+		return vertices;
+	}
 
 }

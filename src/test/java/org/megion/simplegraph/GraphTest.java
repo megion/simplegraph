@@ -42,14 +42,14 @@ public class GraphTest {
         graph.addEdge(v3, v4);
         graph.addEdge(v5, v4);
 
-        List<Edge<Integer>> path = graph.getPath(v1, v4);
+        BreadthFirstTraversal<Integer> bfs = new BreadthFirstTraversal<>();
+        List<Vertex<Integer>> path = bfs.getPath(graph, v1, v4);
         assertEquals(2, path.size());
-        assertEquals(v1, path.get(0).getFrom());
-        assertEquals(v5, path.get(0).getTo());
-        assertEquals(v5, path.get(1).getFrom());
-        assertEquals(v4, path.get(1).getTo());
+        System.out.println("------------- " + path.get(0).getData());
+        assertEquals(v5, path.get(0));
+        assertEquals(v4, path.get(1));
 
-        path = graph.getPath(v2, v6);
+        path = bfs.getPath(graph, v2, v6);
         assertNull(path);
     }
 }

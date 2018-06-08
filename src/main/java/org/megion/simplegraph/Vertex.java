@@ -13,11 +13,11 @@ public class Vertex<T> {
     private final T data;
 
     //private int weight = 0;
-    private final List<Edge<T>> edges;
+    private final List<Edge> edges;
 
     public Vertex(T data) {
         this.data = data;
-        this.edges = new ArrayList<Edge<T>>(0);
+        this.edges = new ArrayList<Edge>(0);
     }
 
     /**
@@ -25,15 +25,19 @@ public class Vertex<T> {
      */
     public Vertex(Vertex<T> other) {
         this.data = other.data;
-        this.edges = new ArrayList<Edge<T>>(other.edges); 
+        this.edges = new ArrayList<Edge>(other.edges);
     }
 
-    public void addEdge(Edge<T> edge) {
+    public void addEdge(Edge edge) {
         edges.add(edge);
     }
 
-    public Iterator<Edge<T>> getEdgesIterator() {
+    public Iterator<Edge> getEdgesIterator() {
         return edges.iterator();
+    }
+
+    public T getData() {
+        return data;
     }
 
     @Override
