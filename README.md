@@ -1,5 +1,6 @@
 Java graph library
 ==================
+[![Build Status](https://travis-ci.org/megion/simplegraph.svg?branch=master)](https://travis-ci.org/megion/simplegraph)
 
 Clone project, build and run tests:
 
