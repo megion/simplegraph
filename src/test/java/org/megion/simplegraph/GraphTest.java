@@ -8,7 +8,7 @@ public class GraphTest {
 
     @Test
     public void canAddVertex() {
-        Graph<Integer> graph = new Graph<Integer>(true);
+        Graph<Integer> graph = new Graph<>(true);
         assertEquals(0, graph.getEdgesCount());
 
         Vertex<Integer> v1 = graph.addVertex(2);
@@ -26,7 +26,7 @@ public class GraphTest {
          * example graph from Stiven Skiena book
          * see head 5.6
          */
-        Graph<Integer> graph = new Graph<Integer>(true);
+        Graph<Integer> graph = new Graph<>(true);
         Vertex<Integer> v1 = graph.addVertex(1);
         Vertex<Integer> v2 = graph.addVertex(2);
         Vertex<Integer> v3 = graph.addVertex(3);

@@ -65,7 +65,8 @@ public class BreadthFirstTraversal<T> {
 
         TraversalVertex<T> startVertex = new TraversalVertex<>(start);
         TraversalVertex<T> childVertex = new TraversalVertex<>(end);
-    
+        pathEdges.add(childVertex.getVertex());
+
         /*
          * iterate by parents from end to start
          */

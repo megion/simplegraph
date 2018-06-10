@@ -7,17 +7,22 @@ Clone project, build and run tests:
     $ cd simplegraph
     $ mvn package
 
+Properties:
+
+* Thread safety
+* Bread-first traversal
+
 Examples:
 =========
 
 * Get path between two vertices:
 
 ```java
-    /**
-      * example graph from Stiven Skiena book
-      * see head 5.6
-      */
-        Graph<Integer> graph = new Graph<Integer>(true);
+        /**
+         * example graph from Stiven Skiena book
+         * see head 5.6
+         */
+        Graph<Integer> graph = new Graph<>(true);
         Vertex<Integer> v1 = graph.addVertex(1);
         Vertex<Integer> v2 = graph.addVertex(2);
         Vertex<Integer> v3 = graph.addVertex(3);
@@ -33,5 +38,6 @@ Examples:
         graph.addEdge(v3, v4);
         graph.addEdge(v5, v4);
 
-        List<Edge<Integer>> path = graph.getPath(v1, v4);
+        BreadthFirstTraversal<Integer> bfs = new BreadthFirstTraversal<>();
+        List<Vertex<Integer>> path = bfs.getPath(graph, v1, v4);
 ```
