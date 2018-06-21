@@ -74,6 +74,7 @@ public class Graph<T> {
     /**
      * create traversal verticies set
      * Thread-safe method
+     * Like method initalize_search from Stiven Skiena book (see head 5.6) 
      */
     public synchronized List<TraversalVertex<T>> createTraversalVertices() {
         List<TraversalVertex<T>> traversalVertices = new ArrayList<>();

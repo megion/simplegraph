@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Breadth-first graph traversal
@@ -16,51 +18,18 @@ public class BreadthFirstTraversal<T> {
     }
 
     /**
+     * get shortes path start -> end
      */
-    public TraversalResult<T> traversal(Graph<T> graph, Vertex<T> startVertex) {
-
-        List<TraversalVertex<T>> vertices = graph.createTraversalVertices();
-        TraversalResult<T> result = new TraversalResult<T>(vertices);
-
-        Queue<TraversalVertex<T>> childrenQueue = new LinkedList<>();
-        TraversalVertex<T> start = new TraversalVertex<>(startVertex);
-        start.setDiscovered(true);
-        childrenQueue.add(start);
-
-        Iterator<TraversalVertex<T>> iter = childrenQueue.iterator();
-        while (iter.hasNext()) {
-            TraversalVertex<T> vert = childrenQueue.remove();
-            vert.setProcessed(true);
-            // 1. processVertexBefore(vert)
-            Iterator<Edge> edges = vert.getVertex().getEdgesIterator();
-            while (edges.hasNext()) {
-                Edge edge = edges.next();
-                TraversalVertex<T> child = vertices.get(edge.getTo());
-                //if (!child.isProcessed() || directed) {
-                //// 2. processEdge(edge)
-                //}
-
-                if (!child.isDiscovered()) {
-                    childrenQueue.add(child);
-                    child.setDiscovered(true);
-                    // edge.from is parent vertex for child
-                    result.getParents().put(child, edge);
-                }
-            }
-            // 3. processVertexAfter(vert)
-        }
-
-        return result;
-    }
-
-    public List<Vertex<T>> getPath(Graph<T> graph, Vertex<T> start,
+    public List<Vertex<T>> getPath(Graph<T> graph,
+                                   Vertex<T> start,
                                    Vertex<T> end) {
         /*
          * for get the shortest path we should do breadth-first graph traversal
          * begin from `start` vertex (root tree)
          */
-        TraversalResult<T> result = traversal(graph, start);
-        List<TraversalVertex<T>> vertices = result.getVertices();
+        List<TraversalVertex<T>> vertices = graph.createTraversalVertices();
+        TraversalResult<T> result = traversal(vertices, start);
+        Map<TraversalVertex<T>, Edge> parents = result.getParents();
         List<Vertex<T>> pathEdges = new ArrayList<>();
 
         TraversalVertex<T> startVertex = new TraversalVertex<>(start);
@@ -71,7 +40,7 @@ public class BreadthFirstTraversal<T> {
          * iterate by parents from end to start
          */
         while (true) {
-            Edge parentEdge = result.getParents().get(childVertex);
+            Edge parentEdge = parents.get(childVertex);
             if (parentEdge == null) {
                 // parent not found in parents, so return null
                 return null;
@@ -85,6 +54,54 @@ public class BreadthFirstTraversal<T> {
                 return pathEdges;
             }
         }
+    }
+
+    /**
+     * search connected componets
+     */
+    public int connectedComponents(Graph<T> graph) {
+        // count connected componenets
+        return 0;
+    }
+
+    /**
+     * realization breadth-first traversal
+     */
+    private TraversalResult<T> traversal(List<TraversalVertex<T>> vertices,
+                                        Vertex<T> startVertex) {
+
+        Queue<TraversalVertex<T>> childrenQueue = new LinkedList<>();
+        TraversalVertex<T> start = new TraversalVertex<>(startVertex);
+        start.setDiscovered(true);
+        childrenQueue.add(start);
+
+        Map<TraversalVertex<T>, Edge> parents = new HashMap<>();
+
+        Iterator<TraversalVertex<T>> iter = childrenQueue.iterator();
+        while (iter.hasNext()) {
+            TraversalVertex<T> vert = childrenQueue.remove();
+            // 1. process_vertex_early(vert)
+            vert.setProcessed(true);
+            Iterator<Edge> edges = vert.getVertex().getEdgesIterator();
+            while (edges.hasNext()) {
+                Edge edge = edges.next();
+                TraversalVertex<T> child = vertices.get(edge.getTo());
+                //if (!child.isProcessed() || directed) {
+                //// 2. process_edge(vert, edge)
+                //}
+
+                if (!child.isDiscovered()) {
+                    childrenQueue.add(child);
+                    child.setDiscovered(true);
+                    // edge.from is parent vertex for child
+                    parents.put(child, edge);
+                }
+            }
+            // 3. process_vertex_late(vert)
+        }
+
+        TraversalResult<T> result = new TraversalResult<>(parents);
+        return result;
     }
 
 
